@@ -7,7 +7,7 @@ class TObstacle {
   #upper;
   #lower;
   #spi;
-
+ 
   constructor(aSpriteCanvas, aSpriteInfo) {
     this.index = GameProps.dayTime ? 2 : 0; // 2 = grønn (dag), 0 = rød (natt)
     this.#spi = aSpriteInfo;
