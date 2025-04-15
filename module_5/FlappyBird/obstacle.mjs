@@ -5,7 +5,7 @@ import { GameProps } from "./FlappyBird.mjs";
 
 class TObstacle {
   #upper;
-  #lower;
+  #lower; 
   #spi;
  
   constructor(aSpriteCanvas, aSpriteInfo) {
