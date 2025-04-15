@@ -8,7 +8,7 @@ import { SpriteInfoList, GameProps, EGameStatus, startGame } from "./FlappyBird.
 Dere skal flytte FlappyBird Spriten til en fornuftig plass på skjermen.
 Lage en play knapp som kan starte spillet.
 */
-
+ 
 export class TMenu {
   #spFlappyBird;
   #spButtonPlay;

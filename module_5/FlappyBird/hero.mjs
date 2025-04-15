@@ -16,7 +16,7 @@ class THero extends libSprite.TSprite {
     this.rotation = 0;
     this.#sineWave = new lib2d.TSineWave(1.5, 2);
   }
-
+ 
   draw() {
     super.draw();
   }
