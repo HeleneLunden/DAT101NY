@@ -97,7 +97,6 @@ class TSprite {
     this.rotation = 0;
   }
 
-  
   draw() {
     if (this.animateSpeed > 0) {
       this.#speedIndex += this.animateSpeed / 100;
@@ -109,10 +108,8 @@ class TSprite {
         }
       }
     }
-  
     this.#spcvs.drawSprite(this.#spi, this.#pos.x, this.#pos.y, this.#index, this.rotation);
   }
-  
 
   translate(aDx, aDy) {
     this.#pos.x += aDx;
@@ -137,11 +134,6 @@ class TSprite {
     return this.#pos.x + this.#spi.width;
   }
 
-  getTop() {
-    return this.posY;
-  }
-  
-
   set posX(aX) {
     this.#pos.x = aX;
     this.boundingBox.x = aX;
@@ -163,14 +155,14 @@ class TSprite {
     return this.#pos;
   }
 
-  set index(aIndex) {
-    this.#index = aIndex;
-  }
-  
   get index() {
     return this.#index;
   }
   
+  set index(aIndex){
+    this.#index = aIndex;
+  }
+
   hasCollided(aSprite){
     return this.boundingBox.isInsideRect(aSprite.boundingBox);
   }

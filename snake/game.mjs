@@ -7,6 +7,7 @@ import libSprite from "../../common/libs/libSprite_v2.mjs";
 import { TGameBoard, GameBoardSize, TBoardCell } from "./gameBoard.mjs";
 import { TSnake, EDirection } from "./snake.mjs";
 import { TBait } from "./bait.mjs";
+import { TMenu } from "./menu.mjs";
 
 //-----------------------------------------------------------------------------------------
 //----------- variables and object --------------------------------------------------------
@@ -35,7 +36,8 @@ export const GameProps = {
   gameBoard: null,
   gameStatus: EGameStatus.Idle,
   snake: null,
-  bait: null
+  bait: null,
+  menu: null,
 };
 
 //------------------------------------------------------------------------------------------
@@ -66,9 +68,10 @@ function loadGame() {
   cvs.width = GameBoardSize.Cols * SheetData.Head.width;
   cvs.height = GameBoardSize.Rows * SheetData.Head.height;
 
-  GameProps.gameStatus = EGameStatus.Playing; // change game status to Idle
+ GameProps.gameStatus = EGameStatus.Idle; // change game status to Idle
 
   /* Create the game menu here */ 
+  GameProps.menu = new TMenu(spcvs);
 
   newGame(); // Call this function from the menu to start a new game, remove this line when the menu is ready
 
@@ -81,17 +84,39 @@ function loadGame() {
 function drawGame() {
   // Clear the canvas
   spcvs.clearCanvas();
-
+  
   switch (GameProps.gameStatus) {
+    case EGameStatus.Idle:
+      GameProps.menu.draw();
+      break;
     case EGameStatus.Playing:
+      GameProps.bait.draw();
+      GameProps.snake.draw();
+      break;
     case EGameStatus.Pause:
       GameProps.bait.draw();
       GameProps.snake.draw();
       break;
+    case EGameStatus.GameOver:
+      GameProps.menu.draw();
   }
   // Request the next frame
   requestAnimationFrame(drawGame);
 }
+
+function startGame() {
+  GameProps.status = EGameStatus.Playing;
+  console.log("Game started!");
+}
+  /*
+  newGame();
+  console.log("Game started!");
+
+  //Koble til Game knappen
+  GameProps.menu = new TMenu(spcvs);
+  GameProps.menu.playButton.onclick = startGame;
+ */
+  
 
 function updateGame() {
   // Update game logic here
@@ -99,6 +124,7 @@ function updateGame() {
     case EGameStatus.Playing:
       if (!GameProps.snake.update()) {
         GameProps.gameStatus = EGameStatus.GameOver;
+        GameProps.status = EGameStatus.GameOver;
         console.log("Game over!");
       }
       break;

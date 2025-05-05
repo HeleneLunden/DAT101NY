@@ -7,6 +7,7 @@ import lib2D from "../../common/libs/lib2d_v2.mjs";
 import { GameProps, SheetData, bateIsEaten } from "./game.mjs"
 import { TBoardCell, EBoardCellInfoType } from "./gameBoard.mjs";
 
+
 //------------------------------------------------------------------------------------------
 //----------- variables and object ---------------------------------------------------------
 //------------------------------------------------------------------------------------------
