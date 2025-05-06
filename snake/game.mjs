@@ -38,6 +38,7 @@ export const GameProps = {
   snake: null,
   bait: null,
   menu: null,
+  
 };
 
 //------------------------------------------------------------------------------------------
@@ -45,10 +46,12 @@ export const GameProps = {
 //------------------------------------------------------------------------------------------
 
 export function newGame() {
+  if (hndUpdateGame) clearInterval(hndUpdateGame); // Clear the previous game interval
   GameProps.gameBoard = new TGameBoard();
   GameProps.snake = new TSnake(spcvs, new TBoardCell(5, 5)); // Initialize snake with a starting position
   GameProps.bait = new TBait(spcvs); // Initialize bait with a starting position
   gameSpeed = 4; // Reset game speed
+  hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
 }
 
 export function bateIsEaten() {
@@ -72,19 +75,34 @@ function loadGame() {
 
   /* Create the game menu here */ 
   GameProps.menu = new TMenu(spcvs);
+  GameProps.menu.setPlayTrigger(() => {
+    newGame(); // Starter nytt spill
+    GameProps.gameStatus = EGameStatus.Playing; // Sett spillstatus til Playing
+  })// Knappen skal starte spillet
+  GameProps.menu.setHomeTrigger(() => {
+    GameProps.gameBoard = null; // Clear the game board
+    GameProps.snake = null; // Fjerne Slange
+    GameProps.bait = null; // Fjerne eple
+    GameProps.gameStatus = EGameStatus.Idle; // Sett spillstatus til Idle
+  });
+  GameProps.menu.setRestartTrigger(() => {
+    newGame(); //Starter nytt spill
+    GameProps.gameStatus = EGameStatus.Playing; // Sett spillstatus til Playing
+  });
+  
+requestAnimationFrame(drawGame); // Start the game loop
+hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
+console.log("Game canvas is rendering!");
+console.log("Game canvas is updating!");
+  //newGame(); // Call this function from the menu to start a new game, remove this line when the menu is ready
 
-  newGame(); // Call this function from the menu to start a new game, remove this line when the menu is ready
 
-  requestAnimationFrame(drawGame);
-  console.log("Game canvas is rendering!");
-  hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
-  console.log("Game canvas is updating!");
+  
 }
 
 function drawGame() {
   // Clear the canvas
   spcvs.clearCanvas();
-  
   switch (GameProps.gameStatus) {
     case EGameStatus.Idle:
       GameProps.menu.draw();
@@ -92,6 +110,7 @@ function drawGame() {
     case EGameStatus.Playing:
       GameProps.bait.draw();
       GameProps.snake.draw();
+      GameProps.menu.draw();
       break;
     case EGameStatus.Pause:
       GameProps.bait.draw();
@@ -100,23 +119,22 @@ function drawGame() {
     case EGameStatus.GameOver:
       GameProps.menu.draw();
   }
-  // Request the next frame
-  requestAnimationFrame(drawGame);
-}
-
-function startGame() {
-  GameProps.status = EGameStatus.Playing;
-  console.log("Game started!");
-}
-  /*
-  newGame();
-  console.log("Game started!");
-
-  //Koble til Game knappen
-  GameProps.menu = new TMenu(spcvs);
-  GameProps.menu.playButton.onclick = startGame;
- */
   
+  requestAnimationFrame(drawGame);
+
+}
+
+
+
+/* SLETTES?
+function startGame() {
+  newGame(); // Starter et nytt spill
+  GameProps.gameStatus = EGameStatus.Playing;
+  console.log("Game started!");
+}
+*/
+  
+
 
 function updateGame() {
   // Update game logic here
@@ -124,7 +142,6 @@ function updateGame() {
     case EGameStatus.Playing:
       if (!GameProps.snake.update()) {
         GameProps.gameStatus = EGameStatus.GameOver;
-        GameProps.status = EGameStatus.GameOver;
         console.log("Game over!");
       }
       break;
@@ -158,7 +175,15 @@ function onKeyDown(event) {
     case " ":
       console.log("Space key pressed!");
       /* Pause the game logic here */
-      
+      if (GameProps.gameStatus === EGameStatus.Playing) {
+        GameProps.gameStatus = EGameStatus.Pause;
+        clearInterval(hndUpdateGame); // Stop the game update interval
+        console.log("Game paused!");
+      } else if (GameProps.gameStatus === EGameStatus.Pause) {
+        GameProps.gameStatus = EGameStatus.Playing;
+        hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Restart the game update interval
+        console.log("Game resumed!");
+      }
       break;
     default:
       console.log(`Key pressed: "${event.key}"`);
@@ -170,3 +195,7 @@ function onKeyDown(event) {
 
 spcvs.loadSpriteSheet("./Media/spriteSheet.png", loadGame);
 document.addEventListener("keydown", onKeyDown);
+
+
+
+
