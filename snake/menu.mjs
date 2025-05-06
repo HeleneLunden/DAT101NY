@@ -19,7 +19,7 @@ export class TMenu {
    this.#spcvs = aSpriteCanvas; 
 
   // kode for jukse litt og starte spillet direkte i en annen status enn EGameStatus.idle
-  GameProps.status = EGameStatus.Idle;
+  GameProps.status = EGameStatus.GameOver;
 
  //Play
   const playPos = new lib2D.TPosition(350,220);
@@ -54,6 +54,9 @@ export class TMenu {
     this.#buttonHome = new libSprite.TSpriteButton(aSpriteCanvas, SheetData.Home, homePos);
     this.#buttonHome.shape.width = homeShapeSize.width;
     this.#buttonHome.shape.height = homeShapeSize.height;
+    this.#buttonHome.onClick = () => {
+      console.log("Home button clicked");
+    }
 
     //restart button
     const restartPos = new lib2D.TPoint (640,400);
@@ -61,8 +64,11 @@ export class TMenu {
     this.#buttonRestart = new libSprite.TSpriteButton(aSpriteCanvas, SheetData.Home, restartPos);
     this.#buttonRestart.shape.width = restartShapeSize.width;
     this.#buttonRestart.shape.height = restartShapeSize.height;
+    this.#buttonRestart.onClick = () => {
+      console.log("Restart button clicked");
     }
-
+  }
+  
 draw() {
   switch (GameProps.status) {
     case EGameStatus.Idle:
