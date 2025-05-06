@@ -16,7 +16,7 @@ export class TMenu {
   #playTrigger = null;
   #homeTrigger = null;
   #restartTrigger = null;
- // #resumeTrigger = null;
+  #resumeTrigger = null;
   constructor(aSpriteCanvas) {
     this.#spcvs = aSpriteCanvas;
 
@@ -37,7 +37,7 @@ export class TMenu {
     this.#spResume = new libSprite.TSpriteButton(aSpriteCanvas, SheetData.Resume, resumePos);
     this.#spResume.animateSpeed = 15; // Start blinkingen
     this.#spResume.onClick = () => {
-     // if (this.#resumeTrigger) this.#resumeTrigger();
+     if (this.#resumeTrigger) this.#resumeTrigger();
       console.log("Resume button clicked");
     };
 
@@ -90,6 +90,7 @@ export class TMenu {
         //skjulte knapper
         this.#spPlay.visible = false;
         //tegner knapper
+        this.#spResume.visible = true;
         this.#spResume.draw();
         break;
       case EGameStatus.GameOver: 
@@ -115,7 +116,7 @@ export class TMenu {
   setRestartTrigger(callBack) {
     this.#restartTrigger = callBack;
   }
- /* setResumeTrigger(callBack) {
+  setResumeTrigger(callBack) {
     this.#resumeTrigger = callBack;
-  }*/
+  }
 } //slutt på TMenu

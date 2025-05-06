@@ -89,6 +89,10 @@ function loadGame() {
     newGame(); //Starter nytt spill
     GameProps.gameStatus = EGameStatus.Playing; // Sett spillstatus til Playing
   });
+  GameProps.menu.setResumeTrigger(() => {
+    GameProps.gameStatus = EGameStatus.Playing; // Sett spillstatus til Playing
+    hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Restart the game update interval
+  });
   
 requestAnimationFrame(drawGame); // Start the game loop
 hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
@@ -115,6 +119,7 @@ function drawGame() {
     case EGameStatus.Pause:
       GameProps.bait.draw();
       GameProps.snake.draw();
+      GameProps.menu.draw();
       break;
     case EGameStatus.GameOver:
       GameProps.menu.draw();
