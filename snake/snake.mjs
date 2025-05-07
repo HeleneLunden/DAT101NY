@@ -245,21 +245,22 @@ export class TSnake {
     if (this.#isDead) {
       return false; // Snake is dead, do not continue
     }  
-      const prevTail = new TSnakeBody(this.#spcvs, new TBoardCell(this.#tail.boardCell.col, this.#tail.boardCell.row));
-      prevTail.direction = this.#tail.direction;
-      prevTail.index = this.#tail.index;
-     
-    
+      let prevBodyPart = null;
+      if (this.#body.length > 0 && this.#body[this.#body.length - 1].wasGrown) {
+        prevBodyPart = this.#body[this.#body.length - 1].clone();
+      }
   
     if (this.#head.update()) {
       for (let i = 0; i < this.#body.length; i++) {
         this.#body[i].update();
       }
-      this.#tail.update();  
+       
       
-      if(this.#body.length > 0 && this.#body[this.#body.length - 1].wasGrown) {
-        this.#body.push(prevTail);
+      if (prevBodyPart) {
+        this.#body.push(prevBodyPart);
         delete this.#body[this.#body.length - 1].wasGrown;
+      } else {
+        this.#tail.update(); 
       }
 
     }else {
@@ -267,12 +268,13 @@ export class TSnake {
       return false; // Collision detected, do not continue
     }
     return true; // No collision, continue
-  }
+    }
+
   addSnakePart () {
     if(this.#body.length > 0) {
       this.#body[this.#body.length - 1].wasGrown = true;
     }
-  }
+    }
 
 
   setDirection(aDirection) {
@@ -281,8 +283,6 @@ export class TSnake {
   }
 
 
-
-  
 
 
   
