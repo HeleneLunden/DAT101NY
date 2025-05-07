@@ -55,11 +55,12 @@ export function newGame() {
 }
 
 export function bateIsEaten() {
-
+  
   console.log("Bait eaten!");
-  /* Logic to increase the snake size and score when bait is eaten */
-
+  GameProps.snake.addSnakePart(); // Add a new part to the snake
+  GameProps.bait.update(); // Move the bait to a new position
   increaseGameSpeed(); // Increase game speed
+ 
 }
 
 
@@ -128,6 +129,7 @@ function drawGame() {
   requestAnimationFrame(drawGame);
 
 }
+
 
 
 

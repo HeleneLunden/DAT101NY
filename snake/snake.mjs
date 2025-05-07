@@ -6,7 +6,7 @@ import libSprite from "../../common/libs/libSprite_v2.mjs";
 import lib2D from "../../common/libs/lib2d_v2.mjs";
 import { GameProps, SheetData, bateIsEaten } from "./game.mjs"
 import { TBoardCell, EBoardCellInfoType } from "./gameBoard.mjs";
-
+import { TMenu } from "./menu.mjs";
 
 //------------------------------------------------------------------------------------------
 //----------- variables and object ---------------------------------------------------------
@@ -27,6 +27,8 @@ class TSnakePart extends libSprite.TSprite {
     this.direction = boardCellInfo.direction;
     boardCellInfo.infoType = EBoardCellInfoType.Snake;
     this.index = this.direction;
+//HELENE
+    this.spcvs = aSpriteCanvas;
   }
 
   update(){
@@ -220,12 +222,14 @@ export class TSnake {
   #head = null;
   #body = null;
   #tail = null;
+  #spcvs = null;
   constructor(aSpriteCanvas, aBoardCell) {
     this.#head = new TSnakeHead(aSpriteCanvas, aBoardCell);
     let col = aBoardCell.col - 1;
     this.#body = [new TSnakeBody(aSpriteCanvas, new TBoardCell(col, aBoardCell.row))];
     col--;
     this.#tail = new TSnakeTail(aSpriteCanvas, new TBoardCell(col, aBoardCell.row));
+    this.#spcvs = aSpriteCanvas;
   } // constructor
 
   draw() {
@@ -237,23 +241,48 @@ export class TSnake {
   } // draw
 
   //Returns true if the snake is alive
-  update(){
+  update() {
     if (this.#isDead) {
       return false; // Snake is dead, do not continue
-    }
-    if(this.#head.update()) {
+    }  
+      const prevTail = new TSnakeBody(this.#spcvs, new TBoardCell(this.#tail.boardCell.col, this.#tail.boardCell.row));
+      prevTail.direction = this.#tail.direction;
+      prevTail.index = this.#tail.index;
+     
+    
+  
+    if (this.#head.update()) {
       for (let i = 0; i < this.#body.length; i++) {
         this.#body[i].update();
       }
       this.#tail.update();  
-    }else if(!this.#isDead){
+      
+      if(this.#body.length > 0 && this.#body[this.#body.length - 1].wasGrown) {
+        this.#body.push(prevTail);
+        delete this.#body[this.#body.length - 1].wasGrown;
+      }
+
+    }else {
       this.#isDead = true;
       return false; // Collision detected, do not continue
     }
     return true; // No collision, continue
   }
+  addSnakePart () {
+    if(this.#body.length > 0) {
+      this.#body[this.#body.length - 1].wasGrown = true;
+    }
+  }
+
 
   setDirection(aDirection) {
     this.#head.setDirection(aDirection);
   } // setDirection
-}
+  }
+
+
+
+  
+
+
+  
