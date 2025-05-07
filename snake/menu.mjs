@@ -70,15 +70,15 @@ export class TMenu {
       console.log("Restart button clicked");
     };
 
-    //bait score - Brukt kode fra Arne Thomas
-    const totalScorePos = new lib2D.TPoint(0, 0);
+    //Total score - Brukt kode fra Arne Thomas
+    const totalScorePos = new lib2D.TPoint(10, 60);
     this.#totalScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, totalScorePos);
     this.#totalScoreNumber.scale = 0.5;
     this.#totalScoreNumber.visible = true; // Endre fra false til true for å vise tallet
     this.#totalScoreNumber.value = 0; // Startverdi
 
     //time score - Brukt kode fra Arne Thomas
-    const timeScorePos = new lib2D.TPoint(600, 0);
+    const timeScorePos = new lib2D.TPoint(10, 10);
     this.#timeScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, timeScorePos);
     this.#timeScoreNumber.scale = 0.5;
     this.#timeScoreNumber.visible = true;
@@ -144,10 +144,10 @@ export class TMenu {
   updateTotalScore (value) { //TELLE EPLER?
     this.#totalScoreNumber.value = value;
   }
-  reducetotalScore () {  //Brukt kode fra Arne Thomas
+  reduceTotalScore () {  //Brukt kode fra Arne Thomas
     if (this.#totalScoreNumber.value >1) {
       this.#totalScoreNumber.value--;
-      console.log ("ReducetotalScore")
+      console.log ("ReduceTotalScore")
     }
   } 
   startBaitCountdown () {

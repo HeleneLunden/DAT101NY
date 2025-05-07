@@ -53,26 +53,27 @@ export function newGame() {
   GameProps.bait = new TBait(spcvs); // Initialize bait with a starting position
   gameSpeed = 4; // Reset game speed
   hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
-  
+  GameProps.totalScore = 0; // Reset total score
+  GameProps.menu.updateTotalScore(0); // Update the score on the menu 
 }
 
 export function baitIsEaten() {
   console.log("Bait eaten!");
-  GameProps.snake.addSnakePart(); // Add a new part to the snake
-  GameProps.bait.update(); // Move the bait to a new position
- // GameProps.totalScore += 1; // Increase the bait score, TELLE EPLE?
- // GameProps.menu.updatetotalScore(GameProps.totalScore); // Update the score on the menu, TELLE EPLER?
-  increaseGameSpeed(); // Increase game speed
+  // Increase game speed
  // REAKSJONSTID SCORE?
- const timeUsed = Date.now() - GameProps.baitSpawnTime; // Calculate the time used to eat the bait
+  const timeUsed = Date.now() - GameProps.baitSpawnTime; // Calculate the time used to eat the bait
   const timeUsedInSec = Math.floor(timeUsed / 1000); // Convert to seconds
   const score = Math.max (0,10 - timeUsedInSec); // Calculate the score based on time used
-  GameProps.menu.updateTimeScore(score); // Update the score on the menu
+  GameProps.menu.updateTotalScore(score); // Update the score on the menu
 
-
+// Calculate the bonus score based on time used
   const bonus = GameProps.menu.addRemainingSeconds();
   GameProps.totalScore += bonus;
   GameProps.menu.updateTotalScore(GameProps.totalScore); // Update the score on the menu
+  
+  GameProps.snake.addSnakePart(); // Add a new part to the snake
+  GameProps.bait.update(); // Move the bait to a new position
+  increaseGameSpeed();
 }
 
 
