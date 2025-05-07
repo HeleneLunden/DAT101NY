@@ -17,6 +17,9 @@ export class TMenu {
   #homeTrigger = null;
   #restartTrigger = null;
   #resumeTrigger = null;
+  #baitScoreNumber;
+  #timeScoreNumber;
+  #currentCountdown = false;
   constructor(aSpriteCanvas) {
     this.#spcvs = aSpriteCanvas;
 
@@ -66,37 +69,55 @@ export class TMenu {
       if (this.#restartTrigger) this.#restartTrigger();
       console.log("Restart button clicked");
     };
+
+    //bait score - Brukt kode fra Arne Thomas
+    const baitScorePos = new lib2D.TPoint(0, 0);
+    this.#baitScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, baitScorePos);
+    this.#baitScoreNumber.scale = 0.5;
+    this.#baitScoreNumber.visible = true; // Endre fra false til true for å vise tallet
+    this.#baitScoreNumber.value = 0; // Startverdi
+
+    const timeScorePos = new lib2D.TPoint(600, 0);
+    this.#timeScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, timeScorePos);
+    this.#timeScoreNumber.scale = 0.5;
+    this.#timeScoreNumber.visible = true;
+    this.#timeScoreNumber.value = 0; 
   }
 
-
-  
   draw() {
     switch (GameProps.gameStatus) {
       case EGameStatus.Idle:
-        //skjulte knapper
+        //skjule
         this.#buttonHome.visible = false;
         this.#buttonRestart.visible = false;
         this.#spResume.visible = false;
-        //tegner knapper
+        //tegne
         this.#spPlay.visible = true;
         this.#spPlay.draw();
         break;
       case EGameStatus.Playing:
-        //skjulte knapper
+        //skjule
         this.#spPlay.visible = false;
         this.#spResume.visible = false;
-        break;
+        //Tegne
+        this.#baitScoreNumber.visible = true;
+        this.#baitScoreNumber.draw();
+        this.#timeScoreNumber.visible = true;
+        this.#timeScoreNumber.draw();
+       break;
       case EGameStatus.Pause:
-        //skjulte knapper
+        //skjule
         this.#spPlay.visible = false;
-        //tegner knapper
+        //tegne
         this.#spResume.visible = true;
         this.#spResume.draw();
         break;
       case EGameStatus.GameOver: 
+        //skjule
         this.#spPlay.visible = false;
         this.#spResume.visible = false;
-        //tegner knapper
+        this.#baitScoreNumber.visible = true; 
+        //tegne
         this.#spMenuBoard.draw();
         this.#buttonHome.draw();
         this.#buttonHome.visible = true;
@@ -119,4 +140,48 @@ export class TMenu {
   setResumeTrigger(callBack) {
     this.#resumeTrigger = callBack;
   }
+
+  updateBaitScore (value) { //TELLE EPLER?
+    this.#baitScoreNumber.value = value;
+  }
+
+  reduceBaitScore () {  //Brukt kode fra Arne Thomas
+    if (this.#baitScoreNumber.value >1) {
+      this.#baitScoreNumber.value--;
+      console.log ("ReduceBaitScore")
+    }
+  } 
+  
+  startBaitCountdown () {
+    this.#timeScoreNumber.value = 20;
+    if (this.#currentCountdown) 
+      return;
+    
+    this.#currentCountdown = true;
+    let lastTick = Date.now();
+
+    const countdown = () => {
+      const now = Date.now();
+      const elapsed = now - lastTick;
+
+      if (elapsed >= 1000) {
+        lastTick = now;
+        if (this.#timeScoreNumber.value > 0) {
+          this.#timeScoreNumber.value--;
+        }
+      }
+    if (this.#timeScoreNumber.value > 0 && GameProps.gameStatus === EGameStatus.Playing) {
+      requestAnimationFrame(countdown);
+    } else {
+      this.#currentCountdown = false;
+    }
+    };
+    requestAnimationFrame(countdown);
+  }
+
+
+  updateTimeScore (score) {
+    this.#timeScoreNumber.value += score;
+  }
+  
 } //slutt på TMenu

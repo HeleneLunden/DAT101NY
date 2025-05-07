@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------------------
 import libSprite from "../../common/libs/libSprite_v2.mjs";
 import lib2D from "../../common/libs/lib2d_v2.mjs";
-import { GameProps, SheetData, bateIsEaten } from "./game.mjs"
+import { GameProps, SheetData, baitIsEaten } from "./game.mjs"
 import { TBoardCell, EBoardCellInfoType } from "./gameBoard.mjs";
 import { TMenu } from "./menu.mjs";
 
@@ -82,7 +82,7 @@ class TSnakeHead extends TSnakePart { //Klasse for slangehodet
     //Check if the snake head is on a bait cell
     const boardCellInfo = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col);
     if(boardCellInfo.infoType === EBoardCellInfoType.Bait) {
-      bateIsEaten();
+      baitIsEaten();
     }else{
       /* Decrease the score if the snake head is not on a bait cell */
     }
@@ -277,7 +277,7 @@ export class TSnake {
       } else { //Slangen vokser ikke, flytt halen videre
         this.#tail.update(); 
       }
-
+    return true; // Slangen lever
     }else {
       this.#isDead = true;
       return false; // Kollisjon, ikke fortsett
@@ -285,16 +285,12 @@ export class TSnake {
     return true; // Ingen kollisjon, fortsett
     }
 
-
-
-
   //Sier at slangen skal vokse i neste oppdatering
   addSnakePart () {
     if(this.#body.length > 0) {
       this.#body[this.#body.length - 1].wasGrown = true;
     }
   }
-
 
   //Setter ny retning på hodet
   setDirection(aDirection) {
