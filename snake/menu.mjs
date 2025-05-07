@@ -17,7 +17,7 @@ export class TMenu {
   #homeTrigger = null;
   #restartTrigger = null;
   #resumeTrigger = null;
-  #baitScoreNumber;
+  #totalScoreNumber;
   #timeScoreNumber;
   #currentCountdown = false;
   constructor(aSpriteCanvas) {
@@ -71,12 +71,13 @@ export class TMenu {
     };
 
     //bait score - Brukt kode fra Arne Thomas
-    const baitScorePos = new lib2D.TPoint(0, 0);
-    this.#baitScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, baitScorePos);
-    this.#baitScoreNumber.scale = 0.5;
-    this.#baitScoreNumber.visible = true; // Endre fra false til true for å vise tallet
-    this.#baitScoreNumber.value = 0; // Startverdi
+    const totalScorePos = new lib2D.TPoint(0, 0);
+    this.#totalScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, totalScorePos);
+    this.#totalScoreNumber.scale = 0.5;
+    this.#totalScoreNumber.visible = true; // Endre fra false til true for å vise tallet
+    this.#totalScoreNumber.value = 0; // Startverdi
 
+    //time score - Brukt kode fra Arne Thomas
     const timeScorePos = new lib2D.TPoint(600, 0);
     this.#timeScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, timeScorePos);
     this.#timeScoreNumber.scale = 0.5;
@@ -100,8 +101,8 @@ export class TMenu {
         this.#spPlay.visible = false;
         this.#spResume.visible = false;
         //Tegne
-        this.#baitScoreNumber.visible = true;
-        this.#baitScoreNumber.draw();
+        this.#totalScoreNumber.visible = true;
+        this.#totalScoreNumber.draw();
         this.#timeScoreNumber.visible = true;
         this.#timeScoreNumber.draw();
        break;
@@ -116,7 +117,7 @@ export class TMenu {
         //skjule
         this.#spPlay.visible = false;
         this.#spResume.visible = false;
-        this.#baitScoreNumber.visible = true; 
+        this.#totalScoreNumber.visible = true; 
         //tegne
         this.#spMenuBoard.draw();
         this.#buttonHome.draw();
@@ -140,18 +141,15 @@ export class TMenu {
   setResumeTrigger(callBack) {
     this.#resumeTrigger = callBack;
   }
-
-  updateBaitScore (value) { //TELLE EPLER?
-    this.#baitScoreNumber.value = value;
+  updateTotalScore (value) { //TELLE EPLER?
+    this.#totalScoreNumber.value = value;
   }
-
-  reduceBaitScore () {  //Brukt kode fra Arne Thomas
-    if (this.#baitScoreNumber.value >1) {
-      this.#baitScoreNumber.value--;
-      console.log ("ReduceBaitScore")
+  reducetotalScore () {  //Brukt kode fra Arne Thomas
+    if (this.#totalScoreNumber.value >1) {
+      this.#totalScoreNumber.value--;
+      console.log ("ReducetotalScore")
     }
   } 
-  
   startBaitCountdown () {
     this.#timeScoreNumber.value = 20;
     if (this.#currentCountdown) 
@@ -172,16 +170,19 @@ export class TMenu {
       }
     if (this.#timeScoreNumber.value > 0 && GameProps.gameStatus === EGameStatus.Playing) {
       requestAnimationFrame(countdown);
-    } else {
-      this.#currentCountdown = false;
-    }
+      } else {
+        this.#currentCountdown = false;
+      }
     };
-    requestAnimationFrame(countdown);
+      requestAnimationFrame(countdown);
   }
-
 
   updateTimeScore (score) {
     this.#timeScoreNumber.value += score;
   }
-  
+
+  addRemainingSeconds () {
+    return this.#timeScoreNumber.value;
+  }
+
 } //slutt på TMenu
