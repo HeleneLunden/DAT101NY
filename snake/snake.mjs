@@ -252,7 +252,7 @@ export class TSnake {
     this.#tail.draw();
   } // draw
 
-  
+
   //Oppdaterer slangen og gjør at den blir lengre
   //Returnerer true hvis slangen lever
   update() {
