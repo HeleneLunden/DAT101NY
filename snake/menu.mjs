@@ -71,16 +71,16 @@ export class TMenu {
     };
 
     //Total score - Brukt kode fra Arne Thomas
-    const totalScorePos = new lib2D.TPoint(10, 60);
+    const totalScorePos = new lib2D.TPoint(10, 80);
     this.#totalScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, totalScorePos);
-    this.#totalScoreNumber.scale = 0.5;
+    this.#totalScoreNumber.scale = 0.9;
     this.#totalScoreNumber.visible = true; // Endre fra false til true for å vise tallet
     this.#totalScoreNumber.value = 0; // Startverdi
 
     //time score - Brukt kode fra Arne Thomas
-    const timeScorePos = new lib2D.TPoint(10, 10);
+    const timeScorePos = new lib2D.TPoint(14, 10);
     this.#timeScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, timeScorePos);
-    this.#timeScoreNumber.scale = 0.5;
+    this.#timeScoreNumber.scale = 0.6;
     this.#timeScoreNumber.visible = true;
     this.#timeScoreNumber.value = 0; 
   }
@@ -112,6 +112,10 @@ export class TMenu {
         //tegne
         this.#spResume.visible = true;
         this.#spResume.draw();
+        this.#totalScoreNumber.visible = true;
+        this.#totalScoreNumber.draw();
+        this.#timeScoreNumber.visible = true;
+        this.#timeScoreNumber.draw();
         break;
       case EGameStatus.GameOver: 
         //skjule
