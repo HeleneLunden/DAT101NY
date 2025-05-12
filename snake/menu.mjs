@@ -20,6 +20,7 @@ export class TMenu {
   #totalScoreNumber;
   #timeScoreNumber;
   #currentCountdown = false;
+  #gameOverScoreNumber
   constructor(aSpriteCanvas) {
     this.#spcvs = aSpriteCanvas;
 
@@ -75,6 +76,7 @@ export class TMenu {
     this.#totalScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, totalScorePos);
     this.#totalScoreNumber.scale = 0.9;
     this.#totalScoreNumber.visible = true; // Endre fra false til true for å vise tallet
+    this.#totalScoreNumber.alpha = 0.5; //gjennomsiktighet
     this.#totalScoreNumber.value = 0; // Startverdi
 
     //time score - Brukt kode fra Arne Thomas
@@ -82,7 +84,15 @@ export class TMenu {
     this.#timeScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, timeScorePos);
     this.#timeScoreNumber.scale = 0.6;
     this.#timeScoreNumber.visible = true;
+    this.#timeScoreNumber.alpha = 0.5; //gjennomsiktighet
     this.#timeScoreNumber.value = 0; 
+
+    //Score posisjon i GameOver
+    let GameOverScoreNumber = new lib2D.TPoint(530, 260);
+    this.#gameOverScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, GameOverScoreNumber);
+    this.#gameOverScoreNumber.scale = 0.9;
+    this.#gameOverScoreNumber.visible = false; // Endre fra false til true for å vise tallet
+    this.#gameOverScoreNumber.value = GameProps.totalScore; // Startverdi
   }
 
   draw() {
@@ -121,13 +131,16 @@ export class TMenu {
         //skjule
         this.#spPlay.visible = false;
         this.#spResume.visible = false;
-        this.#totalScoreNumber.visible = true; 
-        //tegne
+        //tegne resten av meny
         this.#spMenuBoard.draw();
         this.#buttonHome.draw();
         this.#buttonHome.visible = true;
         this.#buttonRestart.visible = true;
         this.#buttonRestart.draw();
+        //Score i GameOver
+        this.#gameOverScoreNumber.value = GameProps.totalScore;
+        this.#gameOverScoreNumber.visible = true;
+        this.#gameOverScoreNumber.draw();
         break;
     }
     

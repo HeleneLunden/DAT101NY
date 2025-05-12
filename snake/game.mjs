@@ -140,6 +140,7 @@ function drawGame() {
 }
   
 
+
 function updateGame() {
   // Update game logic here
   switch (GameProps.gameStatus) {
