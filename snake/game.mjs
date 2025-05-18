@@ -8,7 +8,6 @@ import { TGameBoard, GameBoardSize, TBoardCell } from "./gameBoard.mjs";
 import { TSnake, EDirection } from "./snake.mjs";
 import { TBait } from "./bait.mjs";
 import { TMenu } from "./menu.mjs";
-//import { libSound } from "../../common/libs/libSound.mjs"; FJERNES?
 
 //-----------------------------------------------------------------------------------------
 //----------- variables and object --------------------------------------------------------
@@ -16,6 +15,7 @@ import { TMenu } from "./menu.mjs";
 const eatFoodSound = new Audio("./Media/eatFood.mp3"); //Lyd spilt inn selv
 const crashSound = new Audio("./Media/crash.mp3"); //Hentet lyd fra: https://pixabay.com/sound-effects/falled-sound-effect-278635/
 const backgroundMusic = new Audio("./Media/backgroundMusic.mp3")//Hentet lyd fra: https://pixabay.com/sound-effects/2018-04-23-17816/
+const buttonSound = new Audio("./Media/buttonSound.mp3") //Hentet lyd fra: https://pixabay.com/sound-effects/select-sound-121244/
 const cvs = document.getElementById("cvs");
 const spcvs = new libSprite.TSpriteCanvas(cvs);
 let gameSpeed = 4; // Game speed multiplier;
@@ -44,7 +44,6 @@ export const GameProps = {
   menu: null,
   totalScore: 0,
   baitSpawnTime: null,
-  //sounds: {eatFood: null}, FJERNES?
 };
 
 //------------------------------------------------------------------------------------------
@@ -65,10 +64,10 @@ export function newGame() {
 export function baitIsEaten() {
   console.log("Bait eaten!");
   eatFoodSound.playbackRate = 2; 
-  eatFoodSound.play(); // Spiller av lyden når eplet spises
+  eatFoodSound.play(); 
   /* Logic to increase the snake size and score when bait is eaten */
   const timeUsed = Date.now() - GameProps.baitSpawnTime; // Kalkulerer tid brukt på å spise eplet
-  const timeUsedInSec = Math.floor(timeUsed / 1000); // Konvertert til sekunder
+  const timeUsedInSec = Math.floor(timeUsed / 1000); 
   const score = Math.max (0,10 - timeUsedInSec); // Kalkulerer score basert på tid brukt
   GameProps.menu.updateTotalScore(score); // Oppdater scoren i menyen
 
@@ -96,23 +95,35 @@ function loadGame() {
   /* Create the game menu here */ 
   GameProps.menu = new TMenu(spcvs);
   GameProps.menu.setPlayTrigger(() => {
+    buttonSound.volume = 0.05; 
+    buttonSound.play();
     newGame(); // Call this function from the menu to start a new game, remove this line when the menu is ready
     GameProps.gameStatus = EGameStatus.Playing; 
-    backgroundMusic.play(); // Spiller av bakgrunnsmusikk
-  })// Knappen skal starte spillet
+    backgroundMusic.volume = 0.5;
+    backgroundMusic.play(); 
+  })
   GameProps.menu.setHomeTrigger(() => {
+    buttonSound.volume = 0.05;
+    buttonSound.play();
     GameProps.gameBoard = null; 
     GameProps.snake = null; 
     GameProps.bait = null; 
     GameProps.gameStatus = EGameStatus.Idle; 
+    backgroundMusic.volume = 0.5;
     backgroundMusic.pause(); 
   });
   GameProps.menu.setRestartTrigger(() => {
+    buttonSound.volume = 0.05;
+    buttonSound.play();
+    backgroundMusic.volume = 0.5;
     backgroundMusic.play();
-    newGame(); //Starter nytt spill
+    newGame(); 
     GameProps.gameStatus = EGameStatus.Playing; 
   });
   GameProps.menu.setResumeTrigger(() => {
+    buttonSound.volume = 0.05;
+    buttonSound.play();
+    backgroundMusic.volume = 0.5;
     backgroundMusic.play(); 
     GameProps.gameStatus = EGameStatus.Playing; 
     hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Oppdater spillintervall, restart
@@ -158,7 +169,7 @@ function updateGame() {
       if (!GameProps.snake.update()) {
         backgroundMusic.pause();
         GameProps.gameStatus = EGameStatus.GameOver;
-        crashSound.volume = 0.08;
+        crashSound.volume = 0.02;
         crashSound.play(); 
         console.log("Game over!");
       }
@@ -200,11 +211,15 @@ function onKeyDown(event) {
         backgroundMusic.volume = 0.07;
         GameProps.gameStatus = EGameStatus.Pause;
         clearInterval(hndUpdateGame); // Oppdater spillintervall, pause
+        buttonSound.volume = 0.05;
+        buttonSound.play();
         console.log("Game paused!");
       } else if (GameProps.gameStatus === EGameStatus.Pause) {
-        backgroundMusic.volume = 1;
+        backgroundMusic.volume = 0.5;
         GameProps.gameStatus = EGameStatus.Playing;
         hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Oppdater spillintervall, restart
+        buttonSound.volume = 0.05;
+        buttonSound.play();
         console.log("Game resumed!");
       }
       break;

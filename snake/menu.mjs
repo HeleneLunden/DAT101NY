@@ -19,7 +19,7 @@ export class TMenu {
   #currentCountdown = false;
   #gameOverScoreNumber
   constructor(aSpriteCanvas) {
-    
+
     /* 
     Denne ble brukt til å starte spillet i en annen EGameStatus underveis i programmeringen. 
     GameProps.gameStatus = EGameStatus.Idle; 
@@ -28,7 +28,7 @@ export class TMenu {
     //Play
     const playPos = new lib2D.TPosition(350, 220);
     this.#spPlay = new libSprite.TSpriteButton(aSpriteCanvas, SheetData.Play, playPos);
-    this.#spPlay.animateSpeed = 15; // Start blinkingen
+    this.#spPlay.animateSpeed = 30; // Start blinkingen
     this.#spPlay.onClick = () => {
      if (this.#playTrigger) this.#playTrigger();
       console.log("Play button clicked");
@@ -37,7 +37,7 @@ export class TMenu {
     //Resume
     const resumePos = new lib2D.TPosition(350, 220);
     this.#spResume = new libSprite.TSpriteButton(aSpriteCanvas, SheetData.Resume, resumePos);
-    this.#spResume.animateSpeed = 15; // Start blinkingen
+    this.#spResume.animateSpeed = 30; // Start blinkingen
     this.#spResume.onClick = () => {
      if (this.#resumeTrigger) this.#resumeTrigger();
       console.log("Resume button clicked");
@@ -90,7 +90,6 @@ export class TMenu {
     this.#gameOverScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, GameOverScoreNumber);
     this.#gameOverScoreNumber.scale = 0.9;
     this.#gameOverScoreNumber.visible = false;
-    this.#gameOverScoreNumber.value = GameProps.totalScore; 
   }
 
   draw() {
@@ -190,10 +189,6 @@ export class TMenu {
       }
     };
       requestAnimationFrame(countdown);
-  }
-
-  updateTimeScore (score) {
-    this.#timeScoreNumber.value += score;
   }
 
   addRemainingSeconds () {
