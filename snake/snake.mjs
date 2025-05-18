@@ -6,7 +6,7 @@ import libSprite from "../../common/libs/libSprite_v2.mjs";
 import lib2D from "../../common/libs/lib2d_v2.mjs";
 import { GameProps, SheetData, baitIsEaten } from "./game.mjs"
 import { TBoardCell, EBoardCellInfoType } from "./gameBoard.mjs";
-import { TMenu } from "./menu.mjs";
+// import { TMenu } from "./menu.mjs"; FJERNES
 
 //------------------------------------------------------------------------------------------
 //----------- variables and object ---------------------------------------------------------
@@ -35,17 +35,16 @@ class TSnakePart extends libSprite.TSprite { //Klasse for alle slangedelene
     this.x = this.boardCell.col * this.spi.width;
     this.y = this.boardCell.row * this.spi.height;
   }
-
 } // class TSnakePart
 
 
-class TSnakeHead extends TSnakePart { //Klasse for slangehodet
+class TSnakeHead extends TSnakePart { 
   constructor(aSpriteCanvas, aBoardCell) {
     super(aSpriteCanvas, SheetData.Head, aBoardCell);
     this.newDirection = this.direction;
   }
 
- setDirection(aDirection) { //Retning
+ setDirection(aDirection) { 
     if ((this.direction === EDirection.Right || this.direction === EDirection.Left) && (aDirection === EDirection.Up || aDirection === EDirection.Down)) {
       this.newDirection = aDirection;
     } else if ((this.direction === EDirection.Up || this.direction === EDirection.Down) && (aDirection === EDirection.Right || aDirection === EDirection.Left)) {
@@ -75,9 +74,9 @@ class TSnakeHead extends TSnakePart { //Klasse for slangehodet
     this.index = this.direction;
 
     if (this.checkCollision()) {
-      return false; // Kollisjon, ikke fortsett
+      return false; // Collision detected, do not continue
     }
-    // Oppdater posisjonen til slangeelementet
+    // Update the position of the snake element (subclass)
     super.update();
     //Check if the snake head is on a bait cell
     const boardCellInfo = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col);
@@ -254,35 +253,31 @@ export class TSnake {
 
 
   //Oppdaterer slangen og gjør at den blir lengre
-  //Returnerer true hvis slangen lever
+  //Returns true if the snake is alive
   update() {
     if (this.#isDead) {
-      return false; // Slangen er død, ikke fortsett
+      return false; // Snake is dead, do not continue
     }  
-    
-      let lastBodyPart = null; //lag kopi av siste kroppsdel før den flytter seg
-      if (this.#body.length > 0 && this.#body[this.#body.length - 1].wasGrown) {
-        lastBodyPart = this.#body[this.#body.length - 1].clone();
-      }
-  
-    if (this.#head.update()) { //oppdater:sjekk for kollisjon
+    let lastBodyPart = null; //lag kopi av siste kroppsdel før den flytter seg
+    if (this.#body.length > 0 && this.#body[this.#body.length - 1].wasGrown) {
+      lastBodyPart = this.#body[this.#body.length - 1].clone();
+    }
+    if (this.#head.update()) { //oppdater: sjekk for kollisjon
       for (let i = 0; i < this.#body.length; i++) {
         this.#body[i].update(); 
-      }
-       
-      
-      if (lastBodyPart) { //Når slangen vokser, legg til kopi av siste kroppsdel
-        this.#body.push(lastBodyPart);
-        delete this.#body[this.#body.length - 1].wasGrown;
-      } else { //Slangen vokser ikke, flytt halen videre
-        this.#tail.update(); 
-      }
-    return true; // Slangen lever
-    }else {
-      this.#isDead = true;
-      return false; // Kollisjon, ikke fortsett
     }
-    return true; // Ingen kollisjon, fortsett
+    if (lastBodyPart) { //Når slangen vokser, legg til kopi av siste kroppsdel
+      this.#body.push(lastBodyPart);
+      delete this.#body[this.#body.length - 1].wasGrown;
+    } else { //Slangen vokser ikke, flytt halen videre
+      this.#tail.update(); 
+    }
+    return true; // Slangen lever
+    } else {
+      this.#isDead = true;
+      return false; //collison detected, do not continue
+    }
+    //return true; // No collision, continue  FJERNES
     }
 
   //Sier at slangen skal vokse i neste oppdatering
@@ -292,10 +287,9 @@ export class TSnake {
     }
   }
 
-  //Setter ny retning på hodet
   setDirection(aDirection) {
     this.#head.setDirection(aDirection);
-  } 
+  } // setDirection
 }
 
 

@@ -1,15 +1,15 @@
 "use strict";
 import lib2D from "../../common/libs/lib2d_v2.mjs";
 import libSprite from "../../common/libs/libSprite_v2.mjs";
-import {} from "./snake.mjs";
+// import {} from "./snake.mjs"; FJERNES
 import { EGameStatus, GameProps, SheetData } from "./game.mjs";
 
 /* Use this file to create the menu for the snake game. */
 export class TMenu {
   #spMenuBoard;
-  #spcvs;
+ // #spcvs; FJERNES
   #spPlay;
-  #spPause;
+  //#spPause; FJERNES
   #buttonHome;
   #buttonRestart;
   #spResume;
@@ -22,10 +22,12 @@ export class TMenu {
   #currentCountdown = false;
   #gameOverScoreNumber
   constructor(aSpriteCanvas) {
-    this.#spcvs = aSpriteCanvas;
+    //this.#spcvs = aSpriteCanvas; FJERNES
 
-    // kode for å jukse litt og starte spillet direkte i en annen status enn EGameStatus.idle
-    GameProps.gameStatus = EGameStatus.Idle;
+    /* 
+    Denne ble brukt til å starte spillet i en annen EGameStatus underveis i programmeringen. 
+    GameProps.gameStatus = EGameStatus.Idle; 
+    */
 
     //Play
     const playPos = new lib2D.TPosition(350, 220);
@@ -71,28 +73,28 @@ export class TMenu {
       console.log("Restart button clicked");
     };
 
-    //Total score - Brukt kode fra Arne Thomas
+    //Total score - Brukt kode fra Arne Thomas / Foreleser (Total Score)
     const totalScorePos = new lib2D.TPoint(10, 80);
     this.#totalScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, totalScorePos);
     this.#totalScoreNumber.scale = 0.9;
-    this.#totalScoreNumber.visible = true; // Endre fra false til true for å vise tallet
+    this.#totalScoreNumber.visible = true; 
     this.#totalScoreNumber.alpha = 0.5; //gjennomsiktighet
     this.#totalScoreNumber.value = 0; // Startverdi
 
-    //time score - Brukt kode fra Arne Thomas
+    //time score - Brukt kode fra Arne Thomas / Foreleser (Time Score)
     const timeScorePos = new lib2D.TPoint(14, 10);
     this.#timeScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, timeScorePos);
     this.#timeScoreNumber.scale = 0.6;
     this.#timeScoreNumber.visible = true;
     this.#timeScoreNumber.alpha = 0.5; //gjennomsiktighet
-    this.#timeScoreNumber.value = 0; 
+    this.#timeScoreNumber.value = 0; // Startverdi
 
     //Score posisjon i GameOver
     let GameOverScoreNumber = new lib2D.TPoint(530, 260);
     this.#gameOverScoreNumber = new libSprite.TSpriteNumber(aSpriteCanvas, SheetData.Number, GameOverScoreNumber);
     this.#gameOverScoreNumber.scale = 0.9;
-    this.#gameOverScoreNumber.visible = false; // Endre fra false til true for å vise tallet
-    this.#gameOverScoreNumber.value = GameProps.totalScore; // Startverdi
+    this.#gameOverScoreNumber.visible = false;
+    this.#gameOverScoreNumber.value = GameProps.totalScore; 
   }
 
   draw() {
@@ -144,7 +146,7 @@ export class TMenu {
         break;
     }
     
-  //
+  
   }
   setPlayTrigger(callBack) {
     this.#playTrigger = callBack;
@@ -158,14 +160,14 @@ export class TMenu {
   setResumeTrigger(callBack) {
     this.#resumeTrigger = callBack;
   }
-  updateTotalScore (value) { //TELLE EPLER?
+  updateTotalScore (value) { 
     this.#totalScoreNumber.value = value;
   }
-  reduceTotalScore () {  //Brukt kode fra Arne Thomas
-    if (this.#totalScoreNumber.value >1) {
+  reduceTotalScore () {  //Brukt kode fra Arne Thomas / Foreleser
+    if (this.#totalScoreNumber.value > 1) {
       this.#totalScoreNumber.value--;
       console.log ("ReduceTotalScore")
-    }
+    } //Slutt på brukt kode
   } 
   startBaitCountdown () {
     this.#timeScoreNumber.value = 20;

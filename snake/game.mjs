@@ -47,33 +47,32 @@ export const GameProps = {
 //------------------------------------------------------------------------------------------
 
 export function newGame() {
-  if (hndUpdateGame) clearInterval(hndUpdateGame); // Clear the previous game interval
+  if (hndUpdateGame) clearInterval(hndUpdateGame); 
   GameProps.gameBoard = new TGameBoard();
   GameProps.snake = new TSnake(spcvs, new TBoardCell(5, 5)); // Initialize snake with a starting position
   GameProps.bait = new TBait(spcvs); // Initialize bait with a starting position
   gameSpeed = 4; // Reset game speed
-  hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
-  GameProps.totalScore = 0; // Reset total score
-  GameProps.menu.updateTotalScore(0); // Update the score on the menu 
+  hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Oppdaterer spillet hvert 1000ms
+  GameProps.totalScore = 0; // Resetter total score
+  GameProps.menu.updateTotalScore(0);
 }
 
 export function baitIsEaten() {
   console.log("Bait eaten!");
-  // Increase game speed
- // REAKSJONSTID SCORE?
-  const timeUsed = Date.now() - GameProps.baitSpawnTime; // Calculate the time used to eat the bait
-  const timeUsedInSec = Math.floor(timeUsed / 1000); // Convert to seconds
-  const score = Math.max (0,10 - timeUsedInSec); // Calculate the score based on time used
-  GameProps.menu.updateTotalScore(score); // Update the score on the menu
+  /* Logic to increase the snake size and score when bait is eaten */
+  const timeUsed = Date.now() - GameProps.baitSpawnTime; // Kalkulerer tid brukt på å spise eplet
+  const timeUsedInSec = Math.floor(timeUsed / 1000); // Konvertert til sekunder
+  const score = Math.max (0,10 - timeUsedInSec); // Kalkulerer score basert på tid brukt
+  GameProps.menu.updateTotalScore(score); // Oppdater scoren i menyen
 
-// Calculate the bonus score based on time used
+  //Bonuspoeng ut fra tid brukt
   const bonus = GameProps.menu.addRemainingSeconds();
   GameProps.totalScore += bonus;
-  GameProps.menu.updateTotalScore(GameProps.totalScore); // Update the score on the menu
+  GameProps.menu.updateTotalScore(GameProps.totalScore); // Oppdater scoren i menyen
   
-  GameProps.snake.addSnakePart(); // Add a new part to the snake
-  GameProps.bait.update(); // Move the bait to a new position
-  increaseGameSpeed();
+  GameProps.snake.addSnakePart(); 
+  GameProps.bait.update(); // Flytt bait til ny posisjon
+  increaseGameSpeed();  // Increase game speed
 }
 
 
@@ -85,34 +84,34 @@ function loadGame() {
   cvs.width = GameBoardSize.Cols * SheetData.Head.width;
   cvs.height = GameBoardSize.Rows * SheetData.Head.height;
 
- GameProps.gameStatus = EGameStatus.Idle; // change game status to Idle
+  GameProps.gameStatus = EGameStatus.Idle; // change game status to Idle
 
   /* Create the game menu here */ 
   GameProps.menu = new TMenu(spcvs);
   GameProps.menu.setPlayTrigger(() => {
-    newGame(); // Starter nytt spill
-    GameProps.gameStatus = EGameStatus.Playing; // Sett spillstatus til Playing
+    newGame(); // Call this function from the menu to start a new game, remove this line when the menu is ready
+    GameProps.gameStatus = EGameStatus.Playing; 
   })// Knappen skal starte spillet
   GameProps.menu.setHomeTrigger(() => {
-    GameProps.gameBoard = null; // Clear the game board
-    GameProps.snake = null; // Fjerne Slange
-    GameProps.bait = null; // Fjerne eple
-    GameProps.gameStatus = EGameStatus.Idle; // Sett spillstatus til Idle
+    GameProps.gameBoard = null; 
+    GameProps.snake = null; 
+    GameProps.bait = null; 
+    GameProps.gameStatus = EGameStatus.Idle; 
   });
   GameProps.menu.setRestartTrigger(() => {
     newGame(); //Starter nytt spill
-    GameProps.gameStatus = EGameStatus.Playing; // Sett spillstatus til Playing
+    GameProps.gameStatus = EGameStatus.Playing; 
   });
   GameProps.menu.setResumeTrigger(() => {
-    GameProps.gameStatus = EGameStatus.Playing; // Sett spillstatus til Playing
-    hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Restart the game update interval
+    GameProps.gameStatus = EGameStatus.Playing; 
+    hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Oppdater spillintervall, restart
   });
   
-requestAnimationFrame(drawGame); // Start the game loop
-hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
-console.log("Game canvas is rendering!");
-console.log("Game canvas is updating!");
-  //newGame(); // Call this function from the menu to start a new game, remove this line when the menu is ready
+  requestAnimationFrame(drawGame); // Start the game loop
+  console.log("Game canvas is rendering!");
+  hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
+  console.log("Game canvas is updating!");
+    //newGame(); FJERNES
 }
 
 function drawGame() {
@@ -135,7 +134,7 @@ function drawGame() {
     case EGameStatus.GameOver:
       GameProps.menu.draw();
   }
-  
+  // Request the next frame
   requestAnimationFrame(drawGame);
 }
   
@@ -156,8 +155,8 @@ function updateGame() {
 function increaseGameSpeed() {
   /* Increase game speed logic here */
   gameSpeed += 0.5;
-  clearInterval(hndUpdateGame); // Clear the previous game interval
-  hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
+  clearInterval(hndUpdateGame); 
+  hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Oppdater spillet hvert 1000 ms / gameSpeed
     console.log("Increase game speed!");
  }
 
@@ -185,11 +184,11 @@ function onKeyDown(event) {
       /* Pause the game logic here */
       if (GameProps.gameStatus === EGameStatus.Playing) {
         GameProps.gameStatus = EGameStatus.Pause;
-        clearInterval(hndUpdateGame); // Stop the game update interval
+        clearInterval(hndUpdateGame); // Oppdater spillintervall, pause
         console.log("Game paused!");
       } else if (GameProps.gameStatus === EGameStatus.Pause) {
         GameProps.gameStatus = EGameStatus.Playing;
-        hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Restart the game update interval
+        hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Oppdater spillintervall, restart
         console.log("Game resumed!");
       }
       break;
