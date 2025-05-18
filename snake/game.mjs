@@ -111,7 +111,6 @@ function loadGame() {
   console.log("Game canvas is rendering!");
   hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
   console.log("Game canvas is updating!");
-    //newGame(); FJERNES
 }
 
 function drawGame() {

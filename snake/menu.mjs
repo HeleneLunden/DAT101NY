@@ -1,15 +1,12 @@
 "use strict";
 import lib2D from "../../common/libs/lib2d_v2.mjs";
 import libSprite from "../../common/libs/libSprite_v2.mjs";
-// import {} from "./snake.mjs"; FJERNES
 import { EGameStatus, GameProps, SheetData } from "./game.mjs";
 
 /* Use this file to create the menu for the snake game. */
 export class TMenu {
   #spMenuBoard;
- // #spcvs; FJERNES
   #spPlay;
-  //#spPause; FJERNES
   #buttonHome;
   #buttonRestart;
   #spResume;
@@ -22,8 +19,7 @@ export class TMenu {
   #currentCountdown = false;
   #gameOverScoreNumber
   constructor(aSpriteCanvas) {
-    //this.#spcvs = aSpriteCanvas; FJERNES
-
+    
     /* 
     Denne ble brukt til å starte spillet i en annen EGameStatus underveis i programmeringen. 
     GameProps.gameStatus = EGameStatus.Idle; 

@@ -6,7 +6,6 @@ import libSprite from "../../common/libs/libSprite_v2.mjs";
 import lib2D from "../../common/libs/lib2d_v2.mjs";
 import { GameProps, SheetData, baitIsEaten } from "./game.mjs"
 import { TBoardCell, EBoardCellInfoType } from "./gameBoard.mjs";
-// import { TMenu } from "./menu.mjs"; FJERNES
 
 //------------------------------------------------------------------------------------------
 //----------- variables and object ---------------------------------------------------------
@@ -277,8 +276,7 @@ export class TSnake {
       this.#isDead = true;
       return false; //collison detected, do not continue
     }
-    //return true; // No collision, continue  FJERNES
-    }
+  }
 
   //Sier at slangen skal vokse i neste oppdatering
   addSnakePart () {
