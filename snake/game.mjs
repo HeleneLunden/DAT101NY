@@ -8,10 +8,14 @@ import { TGameBoard, GameBoardSize, TBoardCell } from "./gameBoard.mjs";
 import { TSnake, EDirection } from "./snake.mjs";
 import { TBait } from "./bait.mjs";
 import { TMenu } from "./menu.mjs";
+//import { libSound } from "../../common/libs/libSound.mjs"; FJERNES?
 
 //-----------------------------------------------------------------------------------------
 //----------- variables and object --------------------------------------------------------
 //-----------------------------------------------------------------------------------------
+const eatFoodSound = new Audio("./Media/eatFood.mp3"); //Lyd spilt inn selv
+const crashSound = new Audio("./Media/crash.mp3"); //Hentet lyd fra: https://pixabay.com/sound-effects/falled-sound-effect-278635/
+const backgroundMusic = new Audio("./Media/backgroundMusic.mp3")//Hentet lyd fra: https://pixabay.com/sound-effects/2018-04-23-17816/
 const cvs = document.getElementById("cvs");
 const spcvs = new libSprite.TSpriteCanvas(cvs);
 let gameSpeed = 4; // Game speed multiplier;
@@ -40,6 +44,7 @@ export const GameProps = {
   menu: null,
   totalScore: 0,
   baitSpawnTime: null,
+  //sounds: {eatFood: null}, FJERNES?
 };
 
 //------------------------------------------------------------------------------------------
@@ -59,6 +64,8 @@ export function newGame() {
 
 export function baitIsEaten() {
   console.log("Bait eaten!");
+  eatFoodSound.playbackRate = 2; 
+  eatFoodSound.play(); // Spiller av lyden når eplet spises
   /* Logic to increase the snake size and score when bait is eaten */
   const timeUsed = Date.now() - GameProps.baitSpawnTime; // Kalkulerer tid brukt på å spise eplet
   const timeUsedInSec = Math.floor(timeUsed / 1000); // Konvertert til sekunder
@@ -91,18 +98,22 @@ function loadGame() {
   GameProps.menu.setPlayTrigger(() => {
     newGame(); // Call this function from the menu to start a new game, remove this line when the menu is ready
     GameProps.gameStatus = EGameStatus.Playing; 
+    backgroundMusic.play(); // Spiller av bakgrunnsmusikk
   })// Knappen skal starte spillet
   GameProps.menu.setHomeTrigger(() => {
     GameProps.gameBoard = null; 
     GameProps.snake = null; 
     GameProps.bait = null; 
     GameProps.gameStatus = EGameStatus.Idle; 
+    backgroundMusic.pause(); 
   });
   GameProps.menu.setRestartTrigger(() => {
+    backgroundMusic.play();
     newGame(); //Starter nytt spill
     GameProps.gameStatus = EGameStatus.Playing; 
   });
   GameProps.menu.setResumeTrigger(() => {
+    backgroundMusic.play(); 
     GameProps.gameStatus = EGameStatus.Playing; 
     hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Oppdater spillintervall, restart
   });
@@ -112,6 +123,7 @@ function loadGame() {
   hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
   console.log("Game canvas is updating!");
 }
+
 
 function drawGame() {
   // Clear the canvas
@@ -144,7 +156,10 @@ function updateGame() {
   switch (GameProps.gameStatus) {
     case EGameStatus.Playing:
       if (!GameProps.snake.update()) {
+        backgroundMusic.pause();
         GameProps.gameStatus = EGameStatus.GameOver;
+        crashSound.volume = 0.08;
+        crashSound.play(); 
         console.log("Game over!");
       }
       break;
@@ -182,10 +197,12 @@ function onKeyDown(event) {
       console.log("Space key pressed!");
       /* Pause the game logic here */
       if (GameProps.gameStatus === EGameStatus.Playing) {
+        backgroundMusic.volume = 0.07;
         GameProps.gameStatus = EGameStatus.Pause;
         clearInterval(hndUpdateGame); // Oppdater spillintervall, pause
         console.log("Game paused!");
       } else if (GameProps.gameStatus === EGameStatus.Pause) {
+        backgroundMusic.volume = 1;
         GameProps.gameStatus = EGameStatus.Playing;
         hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Oppdater spillintervall, restart
         console.log("Game resumed!");

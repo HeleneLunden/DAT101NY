@@ -36,7 +36,6 @@ class TSnakePart extends libSprite.TSprite { //Klasse for alle slangedelene
   }
 } // class TSnakePart
 
-
 class TSnakeHead extends TSnakePart { 
   constructor(aSpriteCanvas, aBoardCell) {
     super(aSpriteCanvas, SheetData.Head, aBoardCell);
